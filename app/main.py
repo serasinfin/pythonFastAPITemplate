@@ -8,8 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.api import api_router
 from app.db.init_db import init_db
-from app.db.get_db import get_db
-from app.crud import user
 
 
 logging.basicConfig(
