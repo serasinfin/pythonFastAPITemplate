@@ -37,27 +37,31 @@ class CRUDUser(CRUDBase):
 			self, db: Session, user_id: int, *, obj_in: UserUpdate
 	) -> None:
 		db_obj = db.query(User).filter(User.id == user_id, User.deleted == False).first()
-		if obj_in.name:
-			db_obj.name = obj_in.name   # update name
-		if obj_in.username:
-			db_obj.username = obj_in.username   # update username
-		if obj_in.phone_number:
-			db_obj.phone_number = obj_in.phone_number   # update phone_number
-		if obj_in.email:
-			db_obj.email = obj_in.email  # update email
-		if obj_in.role_id:
-			db_obj.role_id = obj_in.role_id   # update role_id
-		db_obj.active = obj_in.active   # update is_active
-		# Relations for Many-to-Many
-		if obj_in.ability_list:
-			db_obj.ability.clear()
-			for ability_id in obj_in.ability_list:
-				ability = db.query(UserAbility).filter(UserAbility.id == ability_id).first()
-				db_obj.ability.append(ability)
-		db.add(db_obj)
-		db.commit()
-		db.refresh(db_obj)
-		return db_obj
+		try:
+			if obj_in.name:
+				db_obj.name = obj_in.name   # update name
+			if obj_in.username:
+				db_obj.username = obj_in.username   # update username
+			if obj_in.phone_number:
+				db_obj.phone_number = obj_in.phone_number   # update phone_number
+			if obj_in.email:
+				db_obj.email = obj_in.email  # update email
+			if obj_in.role_id:
+				db_obj.role_id = obj_in.role_id   # update role_id
+			db_obj.active = obj_in.active   # update is_active
+			# Relations for Many-to-Many
+			if obj_in.ability_list:
+				db_obj.abilities.clear()
+				for ability_id in obj_in.ability_list:
+					ability = db.query(UserAbility).filter(UserAbility.id == ability_id).first()
+					db_obj.abilities.append(ability)
+			db.add(db_obj)
+			db.commit()
+			db.refresh(db_obj)
+			return db_obj
+		except Exception as e:
+			print(e)
+			return None
 
 	def password_update(
 			self, db: Session, user_id: int, *, obj_in: UserPasswordUpdate
