@@ -107,7 +107,7 @@ class CRUDUser(CRUDBase):
 			role_id: int = None,
 	) -> list[User]:
 		users = db.query(User).filter(User.deleted == False)
-		print(user_id, username, email, role_id)
+
 		if user_id:
 			users = users.filter(User.id == user_id)
 		if username:

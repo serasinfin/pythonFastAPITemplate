@@ -1,7 +1,7 @@
 # Python
 from secrets import compare_digest
 # fastAPI
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Body
 from fastapi.security import OAuth2PasswordRequestForm
 # SQL Alchemy
 from sqlalchemy.orm import Session
@@ -75,7 +75,6 @@ def login(
 		crud.auth.update_valid_token(db, token_active.username, access_token, user_ip)
 	else:
 		crud.auth.create_valid_token(db, user.username, access_token, user_ip)
-
 	return create_token(user, access_token)
 
 
@@ -85,7 +84,7 @@ def login(
 	status_code=status.HTTP_200_OK
 )
 def me(
-		access_token: str,
+		access_token: str = Body(...),
 		db: Session = Depends(get_db)
 ) -> any:
 	# Delete "" from token

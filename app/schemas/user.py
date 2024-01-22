@@ -77,13 +77,6 @@ class UserAbility(UserAbilityInDBBase):
     pass
 
 
-class UserAbilities(BaseModel):
-
-    @classmethod
-    def from_list(cls, abilities: list) -> list:
-        return [cls(**vars(ability)) for ability in abilities]
-
-
 # Basic properties
 class UserBase(BaseModel):
     """This class initializes a base User-class
@@ -167,7 +160,7 @@ class UserInDBBase(UserBase):
 # Additional properties to return via API
 class User(UserInDBBase):
     role: UserRole
-    abilities: UserAbilities = None
+    abilities: list[UserAbility]
 
 
 # User basic info to return in registers and logs
