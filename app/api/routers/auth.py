@@ -84,11 +84,11 @@ def login(
 	status_code=status.HTTP_200_OK
 )
 def me(
-		access_token: str = Body(...),
+		token: schemas.TokenStr = Body(...),
 		db: Session = Depends(get_db)
 ) -> any:
 	# Delete "" from token
-	access_token = access_token.replace('"', '')
+	access_token = token.access_token.replace('"', '')
 	decoded_token = decode_token(access_token)
 	if not decoded_token:
 		raise HTTPException(

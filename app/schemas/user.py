@@ -81,6 +81,11 @@ class UserAbility(UserAbilityInDBBase):
 class UserBase(BaseModel):
     """This class initializes a base User-class
     """
+    username: str = Field(
+        ...,
+        min_length=2,
+        max_length=30
+    )
     name: str = Field(
         ...,
         min_length=2,
@@ -109,11 +114,6 @@ class UserBase(BaseModel):
 
 # Creation properties
 class UserCreate(UserBase):
-    username: str = Field(
-        ...,
-        min_length=2,
-        max_length=30
-    )
     role_id: int = Field(
         ...,
         gt=0
@@ -128,11 +128,6 @@ class UserCreate(UserBase):
 
 # Update user properties
 class UserUpdate(UserBase):
-    username: str = Field(
-        ...,
-        min_length=2,
-        max_length=30
-    )
     role_id: int = Field(
         ...,
         gt=0

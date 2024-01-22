@@ -1,7 +1,7 @@
 # Python
 from datetime import datetime
 # Pydantic
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Token(BaseModel):
@@ -24,3 +24,7 @@ class ValidToken(BaseModel):
     username: str
     token: str = None
     updated_at: datetime = None
+
+
+class TokenStr(BaseModel):
+    access_token: str = Field(..., description="Access token")

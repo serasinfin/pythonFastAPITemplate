@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from .user import User, UserCreate, UserUpdate, UserPasswordUpdate, UserRole, RoleCreate, RoleUpdate, UserAbility, \
     UserAbilityCreate, UserAbilityUpdate
 
-from .auth import Token, TokenData, Login
+from .auth import Token, TokenData, Login, TokenStr
 
 
 class HelloResponse(BaseModel):
