@@ -19,15 +19,13 @@ router = APIRouter()
 @router.get("/", response_model=list[schemas.UserAbility], status_code=status.HTTP_200_OK)
 def get_all(
 		db: Session = Depends(get_db),
-		skip: int = 0,
-		limit: int = 100,
 		*,
 		current_user: schemas.User = Depends(jwt.get_current_user),
 ) -> list[schemas.UserAbility]:
 	"""
 	Get all abilities
 	"""
-	abilities = crud.user_ability.get_all(db, skip=skip, limit=limit)
+	abilities = crud.user_ability.get_all(db)
 	return abilities
 
 
@@ -42,4 +40,4 @@ def create(
 	Create a new ability
 	"""
 	crud.user_ability.create(db, obj_in=request)
-	return schemas.DefaultMessage(detail="Ability created")
+	return schemas.DefaultMessage(detail="Abilidad creada exitosamente.")

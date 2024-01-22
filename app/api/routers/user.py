@@ -66,8 +66,21 @@ def create(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="El usuario ya existe."
         )
-    crud.user.create(db, obj_in=request)
-    return {'detail': 'Usuario creado exitosamente.'}
+    user = crud.user.get_by(db, email=request.email)
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El correo ya existe."
+        )
+
+    try:
+        crud.user.create(db, obj_in=request)
+        return {"detail": "Usuario creado exitosamente."}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
 
 
 # HTTP - PUT

@@ -63,9 +63,7 @@ class UserAbilityCreate(UserAbilityBase):
 
 
 class UserAbilityUpdate(UserAbilityBase):
-
-    class Config:
-        from_attributes = True
+    pass
 
 
 class UserAbilityInDBBase(UserAbilityBase):
@@ -77,6 +75,13 @@ class UserAbilityInDBBase(UserAbilityBase):
 
 class UserAbility(UserAbilityInDBBase):
     pass
+
+
+class UserAbilities(BaseModel):
+
+    @classmethod
+    def from_list(cls, abilities: list) -> list:
+        return [cls(**vars(ability)) for ability in abilities]
 
 
 # Basic properties
@@ -130,6 +135,11 @@ class UserCreate(UserBase):
 
 # Update user properties
 class UserUpdate(UserBase):
+    username: str = Field(
+        ...,
+        min_length=2,
+        max_length=30
+    )
     role_id: int = Field(
         ...,
         gt=0
@@ -157,7 +167,7 @@ class UserInDBBase(UserBase):
 # Additional properties to return via API
 class User(UserInDBBase):
     role: UserRole
-    ability: list[UserAbility] = None  # list of abilities
+    abilities: UserAbilities = None
 
 
 # User basic info to return in registers and logs

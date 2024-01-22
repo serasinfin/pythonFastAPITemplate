@@ -106,17 +106,18 @@ class CRUDUser(CRUDBase):
 			email: str = None,
 			role_id: int = None,
 	) -> list[User]:
+		users = db.query(User).filter(User.deleted == False)
+		print(user_id, username, email, role_id)
 		if user_id:
-			return db.query(User).filter(User.id == user_id).all()
-		elif username:
-			return db.query(User).filter(User.username == username).all()
-		elif email:
-			return db.query(User).filter(User.email == email).all()
-		elif role_id:
-			return db.query(User).filter(User.role_id == role_id).all()
-		else:
-			return db.query(User).filter(User.deleted == False).order_by(asc(User.name)).all()
+			users = users.filter(User.id == user_id)
+		if username:
+			users = users.filter(User.username == username)
+		if email:
+			users = users.filter(User.email == email)
+		if role_id:
+			users = users.filter(User.role_id == role_id)
 
+		return users.order_by(asc(User.name)).all()
 
 
 class CRUDUserRoles(CRUDBase):
@@ -143,16 +144,16 @@ class CRUDUserRoles(CRUDBase):
 		return None
 
 	def get_all(
-			self, db: Session, skip: int = 0, limit: int = 100
+			self, db: Session
 	) -> list[UserRole]:
-		return db.query(UserRole).offset(skip).limit(limit).all()
+		return db.query(UserRole).order_by(asc(UserRole.role_name)).all()
 
-	def get_by(
+	def get_by_name(
 			self, db: Session, *, role_name: str
 	) -> UserRole | None:
 		return db.query(UserRole).filter(UserRole.role_name == role_name).first()
 
-	def get_by(
+	def get_by_id(
 			self, db: Session, *, role_id: int
 	) -> UserRole | None:
 		return db.query(UserRole).filter(UserRole.id == role_id).first()
@@ -188,9 +189,9 @@ class CRUDUserAbility(CRUDBase):
 		return None
 
 	def get_all(
-			self, db: Session, skip: int = 0, limit: int = 100
+			self, db: Session
 	) -> list[UserAbility]:
-		return db.query(UserAbility).offset(skip).limit(limit).all()
+		return db.query(UserAbility).order_by(asc(UserAbility.name)).all()
 
 
 user = CRUDUser()

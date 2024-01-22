@@ -23,11 +23,9 @@ router = APIRouter()
 )
 def get_all(
 		db: Session = Depends(get_db),
-		skip: int = 0,
-		limit: int = 500,
 		current_user: schemas.User = Depends(jwt.get_current_user)
 ) -> list:
-	user_roles = crud.user_roles.get_all(db, skip, limit)
+	user_roles = crud.user_roles.get_all(db)
 	return user_roles
 
 
@@ -55,7 +53,7 @@ def search(
 		if not role:
 			raise HTTPException(
 				status_code=status.HTTP_404_NOT_FOUND,
-				detail="The role with this id not exists in the system."
+				detail="El rol con este id no existe en el sistema."
 			)
 		return role
 	if role_name:
@@ -63,13 +61,13 @@ def search(
 		if not role:
 			raise HTTPException(
 				status_code=status.HTTP_404_NOT_FOUND,
-				detail="The role with this role name not exists in the system."
+				detail="El rol con este nombre no existe en el sistema."
 			)
 		return role
 	if not role_id or role_name:
 		raise HTTPException(
 			status_code=status.HTTP_400_BAD_REQUEST,
-			detail="Please specify role name or role id."
+			detail="Por favor especifique el id o el nombre del rol."
 		)
 	return None
 
@@ -87,11 +85,11 @@ def create(
 		db: Session = Depends(get_db),
 		# current_user: schemas.User = Depends(jwt.get_current_user)
 ) -> schemas.DefaultMessage:
-	role = crud.user_roles.get_by(db, role_name=request.role_name)
+	role = crud.user_roles.get_by_name(db, role_name=request.role_name)
 	if role:
 		raise HTTPException(
 			status_code=status.HTTP_400_BAD_REQUEST,
-			detail="The user with this username already exists in the system."
+			detail="El rol ya existe."
 		)
 	crud.user_roles.create(db, obj_in=request)
-	return schemas.DefaultMessage(detail="Role created")
+	return schemas.DefaultMessage(detail="Rol creado exitosamente.")

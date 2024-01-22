@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 # App
 from app.db.session import Base
 
-user_to_ability = Table(
+user_to_abilities = Table(
     'user_to_abilities',
     Base.metadata,
     Column('user_id', Integer, ForeignKey('users.id')),
@@ -33,7 +33,7 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=datetime.now())
     # Relationships
     role = relationship("UserRole", back_populates="users")
-    ability = relationship("UserAbility", secondary=user_to_ability)   # many-to-many relationship
+    abilities = relationship("UserAbility", secondary=user_to_abilities)   # many-to-many relationship
 
 
 class UserRole(Base):

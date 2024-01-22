@@ -1,3 +1,5 @@
+# Python
+from secrets import compare_digest
 # fastAPI
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordRequestForm
@@ -11,7 +13,8 @@ from app import schemas, crud
 from app.core.security import verify_password, create_access_token, decode_token
 from app.db.get_db import get_db
 from app.utils.dates import current_time
-from secrets import compare_digest
+from app.utils.auth import create_token
+
 
 router = APIRouter()
 
@@ -27,6 +30,7 @@ def login(
 		db: Session = Depends(get_db)
 ) -> any:
 	user = crud.user.get_by(db=db, username=request.username)
+	# user = schemas.User.model_dump_json(user)
 	if not user:
 		raise HTTPException(
 			status_code=status.HTTP_401_UNAUTHORIZED,
@@ -72,21 +76,8 @@ def login(
 	else:
 		crud.auth.create_valid_token(db, user.username, access_token, user_ip)
 
-	token = {
-		"user_data": {
-			"id": user.id,
-			"name": user.name,
-			"username": user.username,
-			"role": user.role.role_name,
-			"ability": user.ability,
-			"phone": user.phone_number,
-			"email": user.email,
-			"password": None
-		},
-		"access_token": access_token,
-		"token_type": "bearer"
-	}
-	return token
+	return create_token(user, access_token)
+
 
 @router.post(
 	path="/me",
@@ -114,19 +105,4 @@ def me(
 		)
 
 	user = crud.user.get_by(db=db, username=decoded_token.get("sub"))
-	token = {
-		"user_data": {
-			"id": user.id,
-			"name": user.name,
-			"username": user.username,
-			"role": user.role.role_name,
-			"ability": user.ability,
-			"phone": user.phone_number,
-			"email": user.email,
-			"password": None
-		},
-		"access_token": access_token,
-		"token_type": "bearer"
-	}
-
-	return token
+	return create_token(user, access_token)
