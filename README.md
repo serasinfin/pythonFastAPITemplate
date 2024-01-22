@@ -9,9 +9,9 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 PROJECT_NAME=fastapi-template
 SECRET_KEY=secret
 
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=fastapi-template
+PG_USER=postgres
+PG_PASSWORD=postgres
+PG_HOST=localhost
+PG_PORT=5432
+PG_NAME=fastapitemplate
 ```
