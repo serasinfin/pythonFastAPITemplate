@@ -92,12 +92,12 @@ class UserBase(BaseModel):
         max_length=30
     )
     phone_number: str = Field(
+        default=None,
         min_length=10,
-        max_length=12,
-        default=""
+        max_length=12
     )
     email: str = Field(
-        ...,
+        default=None,
         min_length=5,
         max_length=250
     )
