@@ -104,4 +104,10 @@ def me(
 		)
 
 	user = crud.user.get_by(db=db, username=decoded_token.get("sub"))
+	if user.allowed_schedule_start is not None and user.allowed_schedule_end is not None:
+		if user.allowed_schedule_start > current_time() or user.allowed_schedule_end < current_time():
+			raise HTTPException(
+				status_code=status.HTTP_401_UNAUTHORIZED,
+				detail="Usuario fuera de horario",
+			)
 	return create_token(user, access_token)
