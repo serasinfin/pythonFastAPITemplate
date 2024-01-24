@@ -7,6 +7,7 @@ from app.core.security import get_password_hash
 from app.schemas import UserCreate, UserUpdate, UserPasswordUpdate, RoleCreate, RoleUpdate, UserAbilityCreate, UserAbilityUpdate
 from app.models.user import User, UserRole, UserAbility
 from .CRUDBase import CRUDBase
+from app.utils.dates import now
 
 
 class CRUDUser(CRUDBase):
@@ -20,7 +21,10 @@ class CRUDUser(CRUDBase):
 			phone_number=obj_in.phone_number,
 			email=obj_in.email,
 			role_id=obj_in.role_id,
-			hashed_password=get_password_hash(obj_in.password)
+			allowed_schedule_start=obj_in.allowed_schedule_start,
+			allowed_schedule_end=obj_in.allowed_schedule_end,
+			hashed_password=get_password_hash(obj_in.password),
+			created_at=now(),
 		)
 		# Relations for Many-to-Many
 		if obj_in.ability_list:
@@ -55,6 +59,7 @@ class CRUDUser(CRUDBase):
 				for ability_id in obj_in.ability_list:
 					ability = db.query(UserAbility).filter(UserAbility.id == ability_id).first()
 					db_obj.abilities.append(ability)
+			db_obj.updated_at = now()
 			db.add(db_obj)
 			db.commit()
 			db.refresh(db_obj)

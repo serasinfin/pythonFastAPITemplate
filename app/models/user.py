@@ -29,8 +29,8 @@ class User(Base):
     allowed_schedule_start = Column(Time(timezone=True), nullable=True, default=None)
     allowed_schedule_end = Column(Time(timezone=True), nullable=True, default=None)
     hashed_password = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), default=datetime.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=datetime.now())
+    created_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime(timezone=True))
     # Relationships
     role = relationship("UserRole", back_populates="users")
     abilities = relationship("UserAbility", secondary=user_to_abilities)   # many-to-many relationship
